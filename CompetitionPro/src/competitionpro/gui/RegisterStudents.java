@@ -1,0 +1,1856 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package competitionpro.gui;
+import competitionpro.dao.CompetitionDAO;
+import competitionpro.dao.CoordinatorDAO;
+import competitionpro.dao.RegisterStudentsDAO;
+import competitionpro.dbutil.DBConnection;
+import competitionpro.pojo.CompetitionPojo;
+import competitionpro.pojo.RegisterStudentsPojo;
+import competitionpro.pojo.WinnersPojo;
+import java.awt.Color;
+import java.awt.Font;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import javax.mail.Multipart;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import java.util.Properties;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ *
+ * @author Rahul
+ */
+public class RegisterStudents extends javax.swing.JFrame {
+
+    String s;
+    JFileChooser chooser = new JFileChooser();
+//     @Override
+//        public void paint(Graphics g) {
+    // TODO Auto-generated method stub
+//    JFileChooser chooser = new JFileChooser();
+//    chooser.setCurrentDirectory(new java.io.File("."));
+//    chooser.setDialogTitle("Browse the folder to process");
+//    chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+//    chooser.setAcceptAllFileFilterUsed(false);
+//
+//    if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+//        System.out.println("getCurrentDirectory(): "+ chooser.getCurrentDirectory());
+//        System.out.println("getSelectedFile() : "+ chooser.getSelectedFile());
+//    } else {
+//        System.out.println("No Selection ");
+//    }
+//}
+
+    /**
+     * Creates new form RegisterStudents
+     */
+    private String mobile, name, enroll, college, branch, sem, email;
+    private String compId, studentId, compName, compMail, compPassword, compDate, venue,inchargeMail,amount,inchargeName;
+    int totalStudents;
+    private String to, from, password, sub, msg;
+    private Long coMobile1, coMobile2;
+
+    public RegisterStudents() {
+        initComponents();
+        super.setLocationRelativeTo(null);
+
+        setTitle("Competition Pro 1.0 Register Students");
+        ImageIcon icon1 = new ImageIcon(getClass().getResource("/images/podium.png"));
+        setIconImage(icon1.getImage());
+        setVisible(true);
+        super.setResizable(false);
+        myTable.getColumnModel().getColumn(0).setPreferredWidth(10);
+        myTable.getColumnModel().getColumn(1).setPreferredWidth(40);
+        myTable.getColumnModel().getColumn(2).setPreferredWidth(15);
+        myTable.getColumnModel().getColumn(3).setPreferredWidth(12);
+        myTable.getColumnModel().getColumn(4).setPreferredWidth(1);
+        myTable.getColumnModel().getColumn(5).setPreferredWidth(80);
+        btnRefresh.setEnabled(false);
+        btnRefresh1.setEnabled(false);
+        btnPrint.setEnabled(false);
+        btnPrintWinners.setEnabled(false);
+    }
+
+    public RegisterStudents(String compMail) {
+        this();
+        this.compMail = compMail;
+        try {
+            CompetitionPojo compPojo = CompetitionDAO.getCompPojo(compMail);
+
+            compDate = compPojo.getDate();
+            compId = compPojo.getCompId();
+            compName = compPojo.getCompName();
+            System.out.println(compName);
+            compPassword = compPojo.getCompPassword();
+            venue = compPojo.getVenue();
+            inchargeMail=compPojo.getInchargeMail();
+            inchargeName=compPojo.getInchargeName();
+            amount=compPojo.getAmount();
+            totalStudents=RegisterStudentsDAO.getTotalStudents(compId);
+            ArrayList<Long> coMobileNo = CoordinatorDAO.getCoordinatorPojo(compId);
+            coMobile1 = Long.valueOf(coMobileNo.get(0));
+            coMobile2 = Long.valueOf(coMobileNo.get(1));
+
+            lblCompName.setText("Competiton Name: " + compName);
+            lblDate.setText("Date: " + compDate);
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Some Exception occured while connecting to DB!!", "Exception!!" + ex, JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        dateChooserDialog1 = new datechooser.beans.DateChooserDialog();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jToolBar1 = new javax.swing.JToolBar();
+        jPanel5 = new javax.swing.JPanel();
+        jFileChooser1 = new javax.swing.JFileChooser();
+        jFileChooser2 = new javax.swing.JFileChooser();
+        jLabel9 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jcbBranch = new javax.swing.JComboBox<>();
+        jcbSem = new javax.swing.JComboBox<>();
+        jcbCollege = new javax.swing.JComboBox<>();
+        jtxtName = new javax.swing.JTextField();
+        jtxtEnroll = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jtxtMobile = new javax.swing.JTextField();
+        jtxtEmail = new javax.swing.JTextField();
+        btnRegister = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        lblCompName = new javax.swing.JLabel();
+        lblDate = new javax.swing.JLabel();
+        btnContact = new javax.swing.JButton();
+        jLabel33 = new javax.swing.JLabel();
+        lblLogout = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        myTable = new javax.swing.JTable();
+        btnViewAll = new javax.swing.JButton();
+        btnPrint = new javax.swing.JButton();
+        btnRefresh = new javax.swing.JButton();
+        jLabel16 = new javax.swing.JLabel();
+        lblLogout1 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        lblfile = new javax.swing.JLabel();
+        btnSendReport = new javax.swing.JButton();
+        txtEmail = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
+        lblLogout2 = new javax.swing.JLabel();
+        jPanel6 = new javax.swing.JPanel();
+        jtxtStudentId = new javax.swing.JTextField();
+        btnDone = new javax.swing.JButton();
+        jLabel18 = new javax.swing.JLabel();
+        lblLogout3 = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        jTabbedPane2 = new javax.swing.JTabbedPane();
+        jPanel8 = new javax.swing.JPanel();
+        jLabel14 = new javax.swing.JLabel();
+        txtStudent = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        txtRank = new javax.swing.JTextField();
+        btnAddWinner = new javax.swing.JButton();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel28 = new javax.swing.JLabel();
+        jLabel29 = new javax.swing.JLabel();
+        jLabel30 = new javax.swing.JLabel();
+        lblLogout5 = new javax.swing.JLabel();
+        jPanel9 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        WinnersTable = new javax.swing.JTable();
+        btnViewAllWinners = new javax.swing.JButton();
+        btnPrintWinners = new javax.swing.JButton();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
+        jLabel26 = new javax.swing.JLabel();
+        lblLogout4 = new javax.swing.JLabel();
+        btnRefresh1 = new javax.swing.JButton();
+        jPanel10 = new javax.swing.JPanel();
+        jLabel21 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txtArea = new javax.swing.JTextArea();
+        btnSend = new javax.swing.JButton();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        jLabel27 = new javax.swing.JLabel();
+        lblLogout6 = new javax.swing.JLabel();
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 635, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 555, Short.MAX_VALUE)
+        );
+
+        jToolBar1.setRollover(true);
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        jFileChooser1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jFileChooser1ActionPerformed(evt);
+            }
+        });
+
+        jFileChooser2.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
+
+        jLabel9.setText("jLabel9");
+
+        jButton2.setText("jButton2");
+
+        jLabel11.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel11.setText("Student Name");
+
+        jLabel13.setText("______________________________________________");
+
+        jLabel12.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel12.setText("Email");
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel10.setText("Student Id");
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jTabbedPane1.setBackground(new java.awt.Color(254, 245, 245));
+        jTabbedPane1.setToolTipText("");
+        jTabbedPane1.setFont(new java.awt.Font("Sitka Heading", 1, 20)); // NOI18N
+
+        jPanel2.setBackground(new java.awt.Color(254, 245, 245));
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel1.setText(" Name");
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel2.setText("Enrollment");
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel3.setText("Mobile");
+
+        jcbBranch.setBackground(new java.awt.Color(254, 245, 245));
+        jcbBranch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jcbBranch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "C.S.E.", "I.T.", "C.A.", "E.C.E.", "E.E.", "M.E.", "C.E.", "OTHER" }));
+
+        jcbSem.setBackground(new java.awt.Color(254, 245, 245));
+        jcbSem.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jcbSem.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th" }));
+
+        jcbCollege.setBackground(new java.awt.Color(254, 245, 245));
+        jcbCollege.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jcbCollege.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "LNCT", "LNCT&S", "LNCT&E", "JNCT", "LNCT University", "Oriental Bhopal", "RGPV Bhopal", "TIT Bhopal", "IES Bhopal", "MANIT Bhopal", "OTHER" }));
+
+        jtxtName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
+        jtxtEnroll.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel4.setText("Branch");
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel5.setText("Semester");
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel6.setText("College");
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel7.setText("Email");
+
+        jtxtMobile.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
+        jtxtEmail.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
+        btnRegister.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/register.png"))); // NOI18N
+        btnRegister.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegisterActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 0, 0));
+        jLabel8.setText("**please enter a valid email");
+
+        lblCompName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblCompName.setForeground(new java.awt.Color(204, 11, 23));
+        lblCompName.setText("sddhld");
+
+        lblDate.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblDate.setForeground(new java.awt.Color(204, 11, 23));
+        lblDate.setText("Date: 99/99/99");
+
+        btnContact.setBackground(new java.awt.Color(254, 245, 245));
+        btnContact.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/rating.png"))); // NOI18N
+        btnContact.setText(" Contact");
+        btnContact.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnContactActionPerformed(evt);
+            }
+        });
+
+        jLabel33.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabel33.setText("©CompetitionPro");
+
+        lblLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logout1.png"))); // NOI18N
+        lblLogout.setText("Logout");
+        lblLogout.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblLogoutMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblLogoutMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblLogoutMouseExited(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel8)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel2)
+                                            .addComponent(jLabel1)
+                                            .addComponent(jLabel6)
+                                            .addComponent(jLabel4)
+                                            .addComponent(jLabel5)
+                                            .addComponent(jLabel3)
+                                            .addComponent(jLabel7))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jtxtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jtxtMobile, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jcbSem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jcbBranch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jcbCollege, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jtxtEnroll, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jtxtName, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(186, 186, 186))
+                            .addComponent(jLabel33, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(lblCompName, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 257, Short.MAX_VALUE)
+                                .addComponent(lblDate))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(btnContact)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblLogout)))
+                        .addContainerGap())))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(281, 281, 281)
+                .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCompName)
+                    .addComponent(lblDate))
+                .addGap(28, 28, 28)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jtxtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jtxtEnroll, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jcbCollege, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jcbBranch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jcbSem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jtxtMobile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jtxtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel8)
+                .addGap(44, 44, 44)
+                .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnContact)
+                    .addComponent(lblLogout))
+                .addGap(12, 12, 12)
+                .addComponent(jLabel33))
+        );
+
+        jTabbedPane1.addTab("Register", jPanel2);
+
+        jPanel3.setBackground(new java.awt.Color(254, 245, 245));
+
+        myTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Id", "Name", "College", "Mobile", "Status", "Email"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(myTable);
+
+        btnViewAll.setBackground(new java.awt.Color(254, 245, 245));
+        btnViewAll.setText("View All");
+        btnViewAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewAllActionPerformed(evt);
+            }
+        });
+
+        btnPrint.setBackground(new java.awt.Color(254, 245, 245));
+        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/print.png"))); // NOI18N
+        btnPrint.setText("Print");
+        btnPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintActionPerformed(evt);
+            }
+        });
+
+        btnRefresh.setBackground(new java.awt.Color(254, 245, 245));
+        btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/refresh16.png"))); // NOI18N
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
+
+        jLabel16.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabel16.setText("©CompetitionPro");
+
+        lblLogout1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logout1.png"))); // NOI18N
+        lblLogout1.setText("Logout");
+        lblLogout1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblLogout1MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblLogout1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblLogout1MouseExited(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 723, Short.MAX_VALUE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(226, 226, 226)
+                        .addComponent(btnViewAll)
+                        .addGap(38, 38, 38)
+                        .addComponent(btnPrint)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblLogout1)))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel16))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(4, 4, 4)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 454, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnPrint)
+                                .addComponent(btnViewAll))
+                            .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblLogout1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addComponent(jLabel16))
+        );
+
+        jTabbedPane1.addTab("View All", jPanel3);
+
+        jPanel4.setBackground(new java.awt.Color(254, 245, 245));
+
+        jButton1.setBackground(new java.awt.Color(254, 245, 245));
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/filebrowser.png"))); // NOI18N
+        jButton1.setText("Chosse File");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        lblfile.setText("filepath");
+
+        btnSendReport.setBackground(new java.awt.Color(254, 245, 245));
+        btnSendReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/iconfinder_Sed-09_2236081 (4).png"))); // NOI18N
+        btnSendReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSendReportActionPerformed(evt);
+            }
+        });
+
+        txtEmail.setBackground(new java.awt.Color(254, 245, 245));
+        txtEmail.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtEmail.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Email", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
+        txtEmail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtEmailActionPerformed(evt);
+            }
+        });
+
+        jLabel17.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabel17.setText("©CompetitionPro");
+
+        lblLogout2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logout1.png"))); // NOI18N
+        lblLogout2.setText("Logout");
+        lblLogout2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblLogout2MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblLogout2MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblLogout2MouseExited(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addGap(0, 664, Short.MAX_VALUE)
+                .addComponent(jLabel17))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(324, 324, 324)
+                .addComponent(btnSendReport)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jButton1)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblfile, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(77, 77, 77))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(lblLogout2)
+                        .addContainerGap())))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addGap(158, 158, 158)
+                .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton1)
+                    .addComponent(lblfile))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
+                .addComponent(btnSendReport, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(82, 82, 82)
+                .addComponent(lblLogout2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel17))
+        );
+
+        jTabbedPane1.addTab("Send Report", jPanel4);
+
+        jPanel6.setBackground(new java.awt.Color(254, 245, 245));
+
+        jtxtStudentId.setBackground(new java.awt.Color(254, 245, 245));
+        jtxtStudentId.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jtxtStudentId.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Student Id", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
+        jtxtStudentId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtxtStudentIdActionPerformed(evt);
+            }
+        });
+
+        btnDone.setBackground(new java.awt.Color(254, 245, 245));
+        btnDone.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/right.png"))); // NOI18N
+        btnDone.setText("Done");
+        btnDone.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDoneActionPerformed(evt);
+            }
+        });
+
+        jLabel18.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabel18.setText("©CompetitionPro");
+
+        lblLogout3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logout1.png"))); // NOI18N
+        lblLogout3.setText("Logout");
+        lblLogout3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblLogout3MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblLogout3MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblLogout3MouseExited(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap(262, Short.MAX_VALUE)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(btnDone, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                                .addComponent(jtxtStudentId, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(230, 230, 230))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                        .addComponent(lblLogout3)
+                        .addContainerGap())))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(176, 176, 176)
+                .addComponent(jtxtStudentId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43)
+                .addComponent(btnDone)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 191, Short.MAX_VALUE)
+                .addComponent(lblLogout3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel18))
+        );
+
+        jTabbedPane1.addTab("Attendance Status", jPanel6);
+
+        jPanel7.setBackground(new java.awt.Color(254, 245, 245));
+
+        jTabbedPane2.setBackground(new java.awt.Color(254, 245, 245));
+        jTabbedPane2.setFont(new java.awt.Font("Sitka Heading", 1, 18)); // NOI18N
+
+        jPanel8.setBackground(new java.awt.Color(254, 245, 245));
+
+        jLabel14.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel14.setText("Student Id");
+
+        txtStudent.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
+        jLabel15.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel15.setText("Rank");
+
+        txtRank.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
+        btnAddWinner.setBackground(new java.awt.Color(254, 245, 245));
+        btnAddWinner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
+        btnAddWinner.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddWinnerActionPerformed(evt);
+            }
+        });
+
+        jLabel19.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabel19.setText("©CompetitionPro");
+
+        jLabel28.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/top.png"))); // NOI18N
+
+        jLabel29.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/trophy2.png"))); // NOI18N
+
+        jLabel30.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/medal.png"))); // NOI18N
+
+        lblLogout5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logout1.png"))); // NOI18N
+        lblLogout5.setText("Logout");
+        lblLogout5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblLogout5MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblLogout5MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblLogout5MouseExited(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel19))
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnAddWinner, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel8Layout.createSequentialGroup()
+                                    .addGap(207, 207, 207)
+                                    .addComponent(jLabel14)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(txtStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                                    .addContainerGap()
+                                    .addComponent(jLabel15)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(txtRank, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 188, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                                .addComponent(jLabel30)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel29)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel28))
+                            .addComponent(lblLogout5, javax.swing.GroupLayout.Alignment.TRAILING))))
+                .addContainerGap())
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel28)
+                    .addComponent(jLabel29)
+                    .addComponent(jLabel30))
+                .addGap(90, 90, 90)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(txtStudent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel15)
+                    .addComponent(txtRank, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(58, 58, 58)
+                .addComponent(btnAddWinner)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 160, Short.MAX_VALUE)
+                .addComponent(lblLogout5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel19))
+        );
+
+        jTabbedPane2.addTab("Add Winner", jPanel8);
+
+        jPanel9.setBackground(new java.awt.Color(254, 245, 245));
+
+        WinnersTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Rank", "Name ", "Sem ", "Enrollment", "College ", "Mobile"
+            }
+        ));
+        jScrollPane2.setViewportView(WinnersTable);
+
+        btnViewAllWinners.setBackground(new java.awt.Color(254, 245, 245));
+        btnViewAllWinners.setText("View All");
+        btnViewAllWinners.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewAllWinnersActionPerformed(evt);
+            }
+        });
+
+        btnPrintWinners.setBackground(new java.awt.Color(254, 245, 245));
+        btnPrintWinners.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/print.png"))); // NOI18N
+        btnPrintWinners.setText("Print");
+        btnPrintWinners.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintWinnersActionPerformed(evt);
+            }
+        });
+
+        jLabel20.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabel20.setText("©CompetitionPro");
+
+        jLabel24.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/top.png"))); // NOI18N
+
+        jLabel25.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/trophy2.png"))); // NOI18N
+
+        jLabel26.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/medal.png"))); // NOI18N
+
+        lblLogout4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logout1.png"))); // NOI18N
+        lblLogout4.setText("Logout");
+        lblLogout4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblLogout4MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblLogout4MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblLogout4MouseExited(evt);
+            }
+        });
+
+        btnRefresh1.setBackground(new java.awt.Color(254, 245, 245));
+        btnRefresh1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/refresh16.png"))); // NOI18N
+        btnRefresh1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefresh1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel20))
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 698, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                                .addComponent(jLabel26)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel25)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel24))
+                            .addComponent(lblLogout4, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addContainerGap())))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                .addGap(54, 54, 54)
+                .addComponent(btnRefresh1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnViewAllWinners)
+                .addGap(192, 192, 192)
+                .addComponent(btnPrintWinners)
+                .addGap(102, 102, 102))
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel25)
+                    .addComponent(jLabel24)
+                    .addComponent(jLabel26))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnPrintWinners)
+                            .addComponent(btnViewAllWinners)))
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnRefresh1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(132, 132, 132)
+                .addComponent(lblLogout4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel20))
+        );
+
+        jTabbedPane2.addTab("See All Winners", jPanel9);
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jTabbedPane2)
+                .addContainerGap())
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jTabbedPane2)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Winners", jPanel7);
+
+        jPanel10.setBackground(new java.awt.Color(254, 245, 245));
+
+        jLabel21.setFont(new java.awt.Font("Constantia", 0, 18)); // NOI18N
+        jLabel21.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel21.setText("Communicate with all your participants");
+
+        txtArea.setBackground(new java.awt.Color(204, 204, 204));
+        txtArea.setColumns(20);
+        txtArea.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
+        txtArea.setForeground(new java.awt.Color(255, 255, 255));
+        txtArea.setRows(5);
+        jScrollPane3.setViewportView(txtArea);
+
+        btnSend.setBackground(new java.awt.Color(254, 245, 245));
+        btnSend.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/iconfinder_Sed-09_2236081 (4).png"))); // NOI18N
+        btnSend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSendActionPerformed(evt);
+            }
+        });
+
+        jLabel22.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/g+.png"))); // NOI18N
+
+        jLabel23.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/git.png"))); // NOI18N
+
+        jLabel27.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabel27.setText("©CompetitionPro");
+
+        lblLogout6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logout1.png"))); // NOI18N
+        lblLogout6.setText("Logout");
+        lblLogout6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblLogout6MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblLogout6MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblLogout6MouseExited(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
+        jPanel10.setLayout(jPanel10Layout);
+        jPanel10Layout.setHorizontalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addGap(83, 83, 83)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addComponent(jLabel23)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel22))
+                    .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel21)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(88, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel27))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                        .addComponent(btnSend, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(341, 341, 341))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                        .addComponent(lblLogout6)
+                        .addContainerGap())))
+        );
+        jPanel10Layout.setVerticalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addGap(66, 66, 66)
+                .addComponent(jLabel21)
+                .addGap(9, 9, 9)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel22, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(61, 61, 61)
+                .addComponent(btnSend, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
+                .addComponent(lblLogout6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel27))
+        );
+
+        jTabbedPane1.addTab("Connect", jPanel10);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 748, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 564, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
+
+        String regex="\\d+";
+        int isValidInputs = validateInputs();
+        if (isValidInputs == 0) {
+            JOptionPane.showMessageDialog(null, "No field can be left blank!", "Error!!", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (isValidInputs == -1) {
+            JOptionPane.showMessageDialog(null, "only Gmail account should be used!", "Error!!", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (isValidInputs == -2) {
+            JOptionPane.showMessageDialog(null, "Mobile number should be of 10 digits!", "Error!!", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if(mobile.matches(regex)==false){
+            JOptionPane.showMessageDialog(null,"Please enter valid Mobile number", "Error!", JOptionPane.ERROR_MESSAGE);
+        }
+        try {
+
+            studentId = RegisterStudentsDAO.getStudentId(compName);
+            //System.out.println(compId+" "+compName+" "+studentId);
+            RegisterStudentsPojo studentPojo = new RegisterStudentsPojo(name, enroll, sem, branch, college, Long.valueOf(mobile), email, compId, studentId, "A");
+            //System.out.println("Hello after constructor");
+            if (RegisterStudentsDAO.registerStudent(studentPojo) && sendMail()) {
+
+                JOptionPane.showMessageDialog(null, "Registration Successful!!\nMail Sent to " + email + "\nStudent ID: " + studentId, "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                clearAll();
+            } else if (RegisterStudentsDAO.registerStudent(studentPojo)) {
+                JOptionPane.showMessageDialog(null, "Registration Successful!!\nMail not Sent to " + email + "\nStudent ID: " + studentId, "Mail Failure", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            } else {
+                JOptionPane.showMessageDialog(null, "Registration Unsuccessful!!", " Registration Failure!!", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Exception ocurred while connecting to DB", "Exception" + ex, JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Registration Successful,Mail not sent\nYour id: " + studentId, "Registration Successful", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btnRegisterActionPerformed
+
+    private void jFileChooser1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFileChooser1ActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jFileChooser1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+//        JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new java.io.File("."));
+        chooser.setDialogTitle("Browse the folder to process");
+        chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        chooser.setAcceptAllFileFilterUsed(false);
+
+        if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            System.out.println("getCurrentDirectory(): " + chooser.getCurrentDirectory());
+            System.out.println("getSelectedFile() : " + chooser.getSelectedFile());
+            s = chooser.getSelectedFile() + "";
+            lblfile.setText(s);
+        } else {
+            System.out.println("No Selection ");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnSendReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendReportActionPerformed
+       try{
+            String host="redhat.com";
+            int port=80;
+            int timeOutInMilliSec=5000;// 5 Seconds
+            Socket socket = new Socket();
+            socket.connect(new InetSocketAddress(host, port), timeOutInMilliSec);
+            System.out.println("Internet is Available");
+        }
+        catch(Exception ex){
+           JOptionPane.showMessageDialog(null,"No Internet Connection is Available!","Error!",JOptionPane.ERROR_MESSAGE);
+           return;
+        }
+         final String username = compMail;
+        String mail =txtEmail.getText();
+        System.out.println(s);
+        if (mail.isEmpty()||s==null) {
+            JOptionPane.showMessageDialog(null, "Please enter Email and attachment file!", "Oops", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        final String password = compPassword;
+        final String to = txtEmail.getText();
+        
+        
+        
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class",
+                "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
+        //get Session   
+        Session session = Session.getDefaultInstance(props,
+                new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            sub="Message from "+compName;
+            message.setSubject(sub);
+            MimeBodyPart bodyPart = new MimeBodyPart();
+            //System.out.println(inchargeMail+" "+to);
+         int answer=JOptionPane.showConfirmDialog(null,"Are you sending this mail to the concerned Authority?","Confirmation!",JOptionPane.YES_NO_OPTION);
+            
+         if(answer==JOptionPane.YES_OPTION)
+            bodyPart.setText("Total Registered Students till now: "+totalStudents+"\nAMOUNT CALCULATED: ₹"+(totalStudents*Integer.valueOf(amount))+
+                                                  "\nEvent Incharge:Mr. "+inchargeName+"\nContact Event Student Coordinators: "+coMobile1+","+coMobile2+"© Competition Pro ☺");
+         else if(answer==JOptionPane.NO_OPTION)
+                bodyPart.setText("Attendance Sheet of "+compName+"\nEvent Incharge:Mr. "+inchargeName+"\nContact Event Student Coordinators: "+coMobile1+","+coMobile2+"© Competition Pro ☺");
+            //if(document != null) {
+                //String filename = document.getAbsolutePath();
+                Multipart multipart = new MimeMultipart();
+                MimeBodyPart attachment = new MimeBodyPart();
+//                String fileName = compName + ".pdf";
+                
+                attachment.attachFile(s);
+                
+            //bodyPart.setDataHandler(new DataHandler(source));
+//              bodyPart.setFileName(fileName);
+                multipart.addBodyPart(attachment);
+                multipart.addBodyPart(bodyPart);
+                message.setContent(multipart);
+            
+            Transport.send(message);
+            System.out.println("message sent successfully");
+            JOptionPane.showMessageDialog(null, "mail sent successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            jtxtEmail.setText("");
+        }
+        catch (MessagingException e) {
+             JOptionPane.showMessageDialog(null,"Mail Not Sent,Are you not connected to internet?","Error!",JOptionPane.ERROR_MESSAGE);
+       
+            throw new RuntimeException(e);
+            
+        }
+        catch (Exception ex) {
+            //Logger.getLogger(Mailer.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null,"Some Exception Occured in Send Mail","Exception"+ex,JOptionPane.ERROR_MESSAGE);
+        }
+        
+        
+    }//GEN-LAST:event_btnSendReportActionPerformed
+
+    private void btnContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContactActionPerformed
+        // TODO add your handling code here:
+        System.out.println("going to support" + compMail + " " + compPassword);
+        Support s = new Support(compMail, compPassword);
+        s.setVisible(true);
+    }//GEN-LAST:event_btnContactActionPerformed
+
+    private void btnViewAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewAllActionPerformed
+        DefaultTableModel model = (DefaultTableModel) myTable.getModel();
+        try {
+            Connection conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement("select student_id,name,college,mobile,attend_status,email from registered_students where comp_id=?");
+            ps.setString(1, compId);
+            ResultSet rs = ps.executeQuery();
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int cols = rsmd.getColumnCount();
+            System.out.println(cols);
+            while (rs.next()) {
+                Object obj[] = new Object[cols];
+                for (int i = 0; i < cols; i++) {
+                    obj[i] = rs.getObject(i + 1);
+                }
+                model.addRow(obj);
+            }
+
+            btnViewAll.setEnabled(false);
+            btnRefresh.setEnabled(true);
+            btnPrint.setEnabled(true);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Some Exception Occurred while connecting to DB!!", "Exception" + ex, JOptionPane.ERROR_MESSAGE);
+        }
+
+    }//GEN-LAST:event_btnViewAllActionPerformed
+
+    private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEmailActionPerformed
+
+    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
+        MessageFormat header = new MessageFormat(compName + " Student Participation List");
+        MessageFormat footer = new MessageFormat("Page{0,number,integer}");
+        try {
+            myTable.print(javax.swing.JTable.PrintMode.FIT_WIDTH, header, footer);
+
+        } catch (java.awt.print.PrinterException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Some Exception Occured!!", "Exception" + ex, JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnPrintActionPerformed
+
+    private void jtxtStudentIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxtStudentIdActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtxtStudentIdActionPerformed
+
+    private void btnDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDoneActionPerformed
+        String studentId = jtxtStudentId.getText();
+        if(studentId.isEmpty())
+        {JOptionPane.showMessageDialog(null,"Please Enter Student ID","INFORMATION",JOptionPane.ERROR_MESSAGE);
+         return;
+        }
+        try {
+            if (RegisterStudentsDAO.updateAttendence(studentId)) {
+                JOptionPane.showMessageDialog(null, "Attendence Status Changed Successfully!!", "Success!!", JOptionPane.INFORMATION_MESSAGE);
+                jtxtStudentId.setText("");
+            } else {
+                JOptionPane.showMessageDialog(null, "No Such Student exist!!", "Failure!!", JOptionPane.ERROR_MESSAGE);
+                jtxtStudentId.setText("");
+
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Some Exception Ocurred While Connecting to DB!!", "Exception" + ex, JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnDoneActionPerformed
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+
+        DefaultTableModel model = (DefaultTableModel) myTable.getModel();
+        model.setRowCount(0);
+        try {
+            Connection conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement("select student_id,name,college,mobile,attend_status,email from registered_students where comp_id=?");
+            ps.setString(1, compId);
+            ResultSet rs = ps.executeQuery();
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int cols = rsmd.getColumnCount();
+            System.out.println(cols);
+            while (rs.next()) {
+                Object obj[] = new Object[cols];
+                for (int i = 0; i < cols; i++) {
+                    obj[i] = rs.getObject(i + 1);
+                }
+                model.addRow(obj);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Some Exception Occurred while connecting to DB!!", "Exception" + ex, JOptionPane.ERROR_MESSAGE);
+        }
+
+
+    }//GEN-LAST:event_btnRefreshActionPerformed
+
+    private void btnViewAllWinnersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewAllWinnersActionPerformed
+        DefaultTableModel model = (DefaultTableModel) WinnersTable.getModel();
+        try {
+            Connection conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement("select w.rank,s.name,s.sem,s.enroll,s.college,s.mobile from winners w inner join registered_students s on s.student_id=w.student_id order by rank");
+
+            ResultSet rs = ps.executeQuery();
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int cols = rsmd.getColumnCount();
+            //   System.out.println(cols);
+            while (rs.next()) {
+                Object obj[] = new Object[cols];
+                for (int i = 0; i < cols; i++) {
+                    obj[i] = rs.getObject(i + 1);
+                }
+                model.addRow(obj);
+            }
+
+            btnViewAllWinners.setEnabled(false);
+            btnRefresh1.setEnabled(true);
+            btnPrintWinners.setEnabled(true);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Some Exception Occurred while connecting to DB!!", "Exception" + ex, JOptionPane.ERROR_MESSAGE);
+        }
+
+    }//GEN-LAST:event_btnViewAllWinnersActionPerformed
+
+    private void btnPrintWinnersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintWinnersActionPerformed
+        MessageFormat header = new MessageFormat(compName + " Winners List");
+        MessageFormat footer = new MessageFormat("Page{0,number,integer}");
+        try {
+            WinnersTable.print(javax.swing.JTable.PrintMode.FIT_WIDTH, header, footer);
+
+        } catch (java.awt.print.PrinterException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Some Exception Occured!!", "Exception" + ex, JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnPrintWinnersActionPerformed
+
+    private void btnAddWinnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddWinnerActionPerformed
+        String student_id = txtStudent.getText();
+        String rank = txtRank.getText();
+        if (student_id.isEmpty() || rank.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No fields can be left blank!!", "Error!", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (student_id.contains(compName.substring(0, 4)) == false || student_id.length() < 7) {
+            JOptionPane.showMessageDialog(null, "No Such Student ID exists!!", "Error!!", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        WinnersPojo winnerPojo = new WinnersPojo(student_id, compId, Integer.valueOf(rank));
+        try {
+            if (CompetitionDAO.addWinner(winnerPojo)) {
+                JOptionPane.showMessageDialog(null, "Winner added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                txtStudent.setText("");
+                txtRank.setText("");
+            } else {
+                JOptionPane.showMessageDialog(null, "Winner could not be added!", "Failure", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Some Exception Occured while connecting to DB!", "Exception!" + ex, JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnAddWinnerActionPerformed
+
+    private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
+        try{
+            String host="redhat.com";
+            int port=80;
+            int timeOutInMilliSec=5000;// 5 Seconds
+            Socket socket = new Socket();
+            socket.connect(new InetSocketAddress(host, port), timeOutInMilliSec);
+            System.out.println("Internet is Available");
+        }
+        catch(Exception ex){
+           JOptionPane.showMessageDialog(null,"No Internet Connection is Available!","Error!",JOptionPane.ERROR_MESSAGE);
+           return;
+        }
+        String message=txtArea.getText();
+        if(message.isEmpty())
+        {
+            JOptionPane.showMessageDialog(null,"Please type a message first!","INFORMATION!",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try{
+            ArrayList<String> allMails=RegisterStudentsDAO.getAllMails(compId);
+            for(String s: allMails)
+            {
+                sendInformativeMail(s);
+            }
+            JOptionPane.showMessageDialog(null,"Message sent to all", "Success", JOptionPane.INFORMATION_MESSAGE);
+        }
+        catch(SQLException ex)
+        {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null,"Some Exception Occured while connecting to DB!","Exception!"+ex, JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_btnSendActionPerformed
+
+    private void lblLogoutMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogoutMouseEntered
+      lblLogout.setForeground(Color.red);
+        Font f = new Font("Tahoma",Font.BOLD,11);
+        lblLogout.setFont(f);
+    }//GEN-LAST:event_lblLogoutMouseEntered
+
+    private void lblLogoutMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogoutMouseExited
+        lblLogout.setForeground(new Color(0,0,0));
+        Font f = new Font("Tahoma",Font.PLAIN,11);
+        lblLogout.setFont(f);
+    }//GEN-LAST:event_lblLogoutMouseExited
+
+    private void lblLogoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogoutMouseClicked
+        this.dispose();
+        WelcomeWindow login = new WelcomeWindow();
+        login.setVisible(true);
+    }//GEN-LAST:event_lblLogoutMouseClicked
+
+    private void lblLogout1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogout1MouseClicked
+        this.dispose();
+        WelcomeWindow login = new WelcomeWindow();
+        login.setVisible(true);
+    }//GEN-LAST:event_lblLogout1MouseClicked
+
+    private void lblLogout1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogout1MouseEntered
+        lblLogout1.setForeground(Color.red);
+        Font f = new Font("Tahoma",Font.BOLD,11);
+        lblLogout1.setFont(f);
+    }//GEN-LAST:event_lblLogout1MouseEntered
+
+    private void lblLogout1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogout1MouseExited
+ lblLogout1.setForeground(new Color(0,0,0));
+        Font f = new Font("Tahoma",Font.PLAIN,11);
+        lblLogout1.setFont(f);
+    }//GEN-LAST:event_lblLogout1MouseExited
+
+    private void lblLogout2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogout2MouseClicked
+         this.dispose();
+        WelcomeWindow login = new WelcomeWindow();
+        login.setVisible(true);
+    }//GEN-LAST:event_lblLogout2MouseClicked
+
+    private void lblLogout2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogout2MouseEntered
+         lblLogout2.setForeground(Color.red);
+        Font f = new Font("Tahoma",Font.BOLD,11);
+        lblLogout2.setFont(f);
+    }//GEN-LAST:event_lblLogout2MouseEntered
+
+    private void lblLogout2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogout2MouseExited
+  lblLogout2.setForeground(new Color(0,0,0));
+        Font f = new Font("Tahoma",Font.PLAIN,11);
+        lblLogout2.setFont(f);
+    }//GEN-LAST:event_lblLogout2MouseExited
+
+    private void lblLogout3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogout3MouseClicked
+      this.dispose();
+        WelcomeWindow login = new WelcomeWindow();
+        login.setVisible(true);
+    }//GEN-LAST:event_lblLogout3MouseClicked
+
+    private void lblLogout3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogout3MouseEntered
+        lblLogout3.setForeground(Color.red);
+        Font f = new Font("Tahoma",Font.BOLD,11);
+        lblLogout3.setFont(f);
+    }//GEN-LAST:event_lblLogout3MouseEntered
+
+    private void lblLogout3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogout3MouseExited
+    lblLogout3.setForeground(new Color(0,0,0));
+        Font f = new Font("Tahoma",Font.PLAIN,11);
+        lblLogout3.setFont(f);
+    }//GEN-LAST:event_lblLogout3MouseExited
+
+    private void lblLogout4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogout4MouseClicked
+      this.dispose();
+        WelcomeWindow login = new WelcomeWindow();
+        login.setVisible(true);
+    }//GEN-LAST:event_lblLogout4MouseClicked
+
+    private void lblLogout4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogout4MouseEntered
+          lblLogout4.setForeground(Color.red);
+        Font f = new Font("Tahoma",Font.BOLD,11);
+        lblLogout4.setFont(f);
+    }//GEN-LAST:event_lblLogout4MouseEntered
+
+    private void lblLogout4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogout4MouseExited
+       lblLogout4.setForeground(new Color(0,0,0));
+        Font f = new Font("Tahoma",Font.PLAIN,11);
+        lblLogout4.setFont(f);
+    }//GEN-LAST:event_lblLogout4MouseExited
+
+    private void lblLogout5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogout5MouseClicked
+ this.dispose();
+        WelcomeWindow login = new WelcomeWindow();
+        login.setVisible(true);
+    }//GEN-LAST:event_lblLogout5MouseClicked
+
+    private void lblLogout5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogout5MouseEntered
+          lblLogout5.setForeground(Color.red);
+        Font f = new Font("Tahoma",Font.BOLD,11);
+        lblLogout5.setFont(f);
+    }//GEN-LAST:event_lblLogout5MouseEntered
+
+    private void lblLogout5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogout5MouseExited
+       lblLogout5.setForeground(new Color(0,0,0));
+        Font f = new Font("Tahoma",Font.PLAIN,11);
+        lblLogout5.setFont(f);
+    }//GEN-LAST:event_lblLogout5MouseExited
+
+    private void lblLogout6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogout6MouseClicked
+        this.dispose();
+        WelcomeWindow login = new WelcomeWindow();
+        login.setVisible(true);
+    }//GEN-LAST:event_lblLogout6MouseClicked
+
+    private void lblLogout6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogout6MouseEntered
+      lblLogout6.setForeground(Color.red);
+        Font f = new Font("Tahoma",Font.BOLD,11);
+        lblLogout6.setFont(f);
+    }//GEN-LAST:event_lblLogout6MouseEntered
+
+    private void lblLogout6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogout6MouseExited
+          lblLogout6.setForeground(new Color(0,0,0));
+        Font f = new Font("Tahoma",Font.PLAIN,11);
+        lblLogout6.setFont(f);
+    }//GEN-LAST:event_lblLogout6MouseExited
+
+    private void btnRefresh1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefresh1ActionPerformed
+        
+        DefaultTableModel model = (DefaultTableModel) WinnersTable.getModel();
+         model.setRowCount(0);
+        try {
+            Connection conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement("select w.rank,s.name,s.sem,s.enroll,s.college,s.mobile from winners w inner join registered_students s on s.student_id=w.student_id order by rank");
+
+            ResultSet rs = ps.executeQuery();
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int cols = rsmd.getColumnCount();
+            //   System.out.println(cols);
+            while (rs.next()) {
+                Object obj[] = new Object[cols];
+                for (int i = 0; i < cols; i++) {
+                    obj[i] = rs.getObject(i + 1);
+                }
+                model.addRow(obj);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Some Exception Occurred while connecting to DB!!", "Exception" + ex, JOptionPane.ERROR_MESSAGE);
+        }
+
+    }//GEN-LAST:event_btnRefresh1ActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(RegisterStudents.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(RegisterStudents.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(RegisterStudents.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(RegisterStudents.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new RegisterStudents().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable WinnersTable;
+    private javax.swing.JButton btnAddWinner;
+    private javax.swing.JButton btnContact;
+    private javax.swing.JButton btnDone;
+    private javax.swing.JButton btnPrint;
+    private javax.swing.JButton btnPrintWinners;
+    private javax.swing.JButton btnRefresh;
+    private javax.swing.JButton btnRefresh1;
+    private javax.swing.JButton btnRegister;
+    private javax.swing.JButton btnSend;
+    private javax.swing.JButton btnSendReport;
+    private javax.swing.JButton btnViewAll;
+    private javax.swing.JButton btnViewAllWinners;
+    private datechooser.beans.DateChooserDialog dateChooserDialog1;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JFileChooser jFileChooser1;
+    private javax.swing.JFileChooser jFileChooser2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTabbedPane jTabbedPane2;
+    private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JComboBox<String> jcbBranch;
+    private javax.swing.JComboBox<String> jcbCollege;
+    private javax.swing.JComboBox<String> jcbSem;
+    private javax.swing.JTextField jtxtEmail;
+    private javax.swing.JTextField jtxtEnroll;
+    private javax.swing.JTextField jtxtMobile;
+    private javax.swing.JTextField jtxtName;
+    private javax.swing.JTextField jtxtStudentId;
+    private javax.swing.JLabel lblCompName;
+    private javax.swing.JLabel lblDate;
+    private javax.swing.JLabel lblLogout;
+    private javax.swing.JLabel lblLogout1;
+    private javax.swing.JLabel lblLogout2;
+    private javax.swing.JLabel lblLogout3;
+    private javax.swing.JLabel lblLogout4;
+    private javax.swing.JLabel lblLogout5;
+    private javax.swing.JLabel lblLogout6;
+    private javax.swing.JLabel lblfile;
+    private javax.swing.JTable myTable;
+    private javax.swing.JTextArea txtArea;
+    private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtRank;
+    private javax.swing.JTextField txtStudent;
+    // End of variables declaration//GEN-END:variables
+
+    private void sendInformativeMail(String s)
+    {
+         final String username = compMail;
+        String mail =s;
+        System.out.println(s);
+        if (mail.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter a message first!!", "Oops", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        final String password = compPassword;
+        
+         sub = "Greetings from " + compName;
+        msg = txtArea.getText();
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class",
+                "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
+        //get Session   
+        Session session = Session.getDefaultInstance(props,
+                new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
+        //compose message    
+        int c = 0;
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(mail));
+            message.setSubject(sub);
+            message.setText(msg);
+            //send message  
+            Transport.send(message);
+            System.out.println("message sent successfully");
+            c = 1;
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+
+        
+        
+    
+    }
+    
+    private int validateInputs() {
+
+        name = jtxtName.getText();
+        enroll = jtxtEnroll.getText();
+        college = jcbCollege.getSelectedItem().toString();
+        branch = jcbBranch.getSelectedItem().toString();
+        sem = jcbSem.getSelectedItem().toString();
+        mobile = jtxtMobile.getText();
+        email = jtxtEmail.getText();
+
+        if (name.isEmpty() || enroll.isEmpty() || college.isEmpty() || branch.isEmpty() || sem.isEmpty() || mobile.isEmpty() || email.isEmpty()) {
+            return 0;
+        }
+        if (email.contains("@gmail.com") == false) {
+            return -1;
+        }
+        if (mobile.length() != 10) {
+            return -2;
+        }
+
+        return 1;
+    }
+
+    private void clearAll() {
+        jtxtName.setText("");
+        jtxtEnroll.setText("");
+        jtxtMobile.setText("");
+        jtxtEmail.setText("");
+    }
+
+    private boolean sendMail() throws Exception {
+        from = compMail;
+        System.out.println(from);
+        to = email;
+
+        System.out.println(to);
+        password = compPassword;
+        System.out.println(password);
+        sub = "Greetings from " + compName;
+        msg = "congratulations your registration for the event " + compName + " is successfull!\n\nYour Id: " + studentId + "\nName: " + name + "\nCollege: " + college + "\nDate of event: " + compDate + "\nVenue: " + venue
+                + "\nFor Queries Contact: " + coMobile1 + ", " + coMobile2 + "\n\n\n\n" + "© Competition Pro ☺";
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class",
+                "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
+        //get Session   
+        Session session = Session.getDefaultInstance(props,
+                new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(from, password);
+            }
+        });
+        //compose message    
+        int c = 0;
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            message.setSubject(sub);
+            message.setText(msg);
+            //send message  
+            Transport.send(message);
+            System.out.println("message sent successfully");
+            c = 1;
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return (c == 1);
+    }
+
+}
